@@ -92,6 +92,11 @@ def register():
     db.collection(u'Users').add(data)
     return 'Success', 200
 
+@app.route("/api/movies/", methods=["GET"])
+def movies():
+    url = "https://api.themoviedb.org/3/movie/578?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=pl-PL"
+    return jsonify(url), 200
+
 # @app.route("/api/mail", methods=["GET"])
 # def f_mail():
 #     client = tasks_v2.CloudTasksClient()
