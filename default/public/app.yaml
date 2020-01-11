@@ -1,0 +1,38 @@
+runtime: python37
+handlers:
+  - url: /
+    static_files: index.html
+    upload: index.html
+    secure: always
+  - url: /admin
+    static_files: index.html
+    upload: index.html
+    secure: always
+  - url: /mobile
+    static_files: index.html
+    upload: index.html
+    secure: always
+  - url: /favicon.ico
+    static_files: favicon.ico
+    upload: favicon.ico
+    secure: always
+    expiration: "30d"
+
+  - url: /js/((?:app|chunk-vendors|chunk-[a-zA-Z0-9]+)\.?[a-zA-Z0-9]+.js)
+    static_files: js/\1
+    upload: js/((?:app|chunk-vendors|chunk-[a-zA-Z0-9]+)\.?[a-zA-Z0-9]+.js)
+    secure: always
+  - url: /css/((?:app|chunk-vendors|chunk-[a-zA-Z0-9]+)\.?[a-zA-Z0-9]+.css)
+    static_files: css/\1
+    upload: css/((?:app|chunk-vendors|chunk-[a-zA-Z0-9]+)\.?[a-zA-Z0-9]+.css)
+    secure: always
+  - url: /fonts/((?:fa-solid-|fa-regular-|fa-brands-)\d{3}\.[a-zA-Z0-9]+\.(?:ttf|eot|woff2|woff))
+    static_files: fonts/\1
+    upload: fonts/((?:fa-solid-|fa-regular-|fa-brands-)\d{3}\.[a-zA-Z0-9]+\.(?:ttf|eot|woff2|woff))
+    secure: always
+    expiration: "365d"
+  - url: /img/(.*)
+    static_files: img/\1
+    upload: /img/(.*)
+    secure: always
+    expiration: "30d"
