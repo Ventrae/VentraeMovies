@@ -18,8 +18,9 @@ def login():
         return {
             'Alert': 'Email or password cannot be empty',
         }, 400
-    password = hashlib.sha256(password.encode("UTF-8"))
 
+    password = hashlib.sha256(password.encode("UTF-8"))
+    
     query_ref = db.collection(u'Users').where("email", "==", email)
     online_query_ref = db.collection(
             u'UsersOnline').where("email", "==", email)
@@ -30,10 +31,10 @@ def login():
     for user in usersOnline:
         if email == user.to_dict()['email']:
             print(user.to_dict()['email'])
-            return 'You are already logged in', 200
+            return 'You are already logged in', 400
 
     if session.get('token'):
-        return 'You are already logged in', 200
+        return 'You are already logged in', 400
 
     for user in users:
         if email == user.to_dict()['email'] and user.to_dict()['password'] == password.hexdigest():
