@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from '@/views/Index.vue';
+  import indexFooter from '@/components/index/indexFooter.vue';
 import Browse from '@/views/Browse.vue';
 import Reviewed from '@/views/Reviewed.vue';
 import Account from '@/views/Account.vue';
@@ -11,7 +12,10 @@ const routes = [
   {
     path: '/',
     name: 'index',
-    component: Index
+    components:{
+      default: Index,
+      footer: indexFooter
+    }
   },
   {
     path: '/browse',

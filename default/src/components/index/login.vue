@@ -1,15 +1,15 @@
 <template>
-    <form>
+    <form @submit.prevent="login">
 
         <h1 class="flex-center my-0">VentraeMovies</h1>
         <hr/>
-            <label for="defaultFormLoginEmailEx" class="grey-text mb-1">Adres e-mail:</label>
-            <input type="email" id="defaultFormLoginEmailEx" class="form-control mb-2"/>
+            <label for="login_email" class="grey-text mb-1">Adres e-mail:</label>
+            <input type="email" id="login_email" class="form-control mb-2" v-model="email"/>
 
-            <label for="defaultFormLoginPasswordEx" class="grey-text mb-1">Hasło:</label>
-            <input type="password" id="defaultFormLoginPasswordEx" class="form-control"/>
+            <label for="login_password" class="grey-text mb-1">Hasło:</label>
+            <input type="password" id="login_password" class="form-control" v-model="password"/>
         <div class="text-center mt-3">
-            <mdb-btn type="button" gradient="blue">Zaloguj</mdb-btn>
+            <mdb-btn type="submit" gradient="blue">Zaloguj</mdb-btn>
         </div>
         <hr/>
 
@@ -21,14 +21,64 @@
                 Zarejestruj się
             </a>
         </div>
-
     </form>
 </template>
 
 <script>
     export default {
         name: "login",
+        data(){
+            return {
+                email: '',
+                password: ''
+            }
+        },
         methods: {
+            validate(){
+                let valid = true;
+                let error = '';
+
+                if(this.email === ''){
+                    valid = false;
+                    error = 'Podaj adres e-mail!';
+                }
+
+                if(this.password === ''){
+                    valid = false;
+                    error = 'Podaj hasło!';
+                }
+
+                return {valid, error};
+            },
+            login(){
+                let url = 'https://projektarc.appspot.com/api/login';
+                let validation = this.validate();
+
+                if(validation.valid){
+                    let user = {
+                        email: this.email,
+                        password: this.password
+                    };
+                    this.$http.post(url, user)
+                        .then(
+                            response => {
+                                if(response.status === 200){
+                                    localStorage.token = response.body;
+                                    this.$router.push('/browse');
+                                }
+                                else {
+                                    alert(response.body);
+                                }
+                            },
+                            error => {
+                                console.error(error);
+                            }
+                        );
+                }
+                else {
+                    alert(validation.error);
+                }
+            },
             switchCard(){
                 this.$emit('switched', 'register');
             }

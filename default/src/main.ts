@@ -7,14 +7,20 @@ import router from './router'
 import store from './store'
 import './assets/scss/styles.scss';
 
+// Material-Design-Bootstrap (mdb)
 // @ts-ignore
 import * as mdbvue from 'mdbvue'
 for (const component in mdbvue) {
   Vue.component(component, mdbvue[component])
 }
 
-Vue.config.productionTip = false;
+// VueResource
+import VueResource from 'vue-resource';
+Vue.use(VueResource);
 
+
+
+Vue.config.productionTip = false;
 new Vue({
   router,
   store,

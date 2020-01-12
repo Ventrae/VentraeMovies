@@ -33,6 +33,6 @@ handlers:
     expiration: "365d"
   - url: /img/(.*)
     static_files: img/\1
-    upload: /img/(.*)
+    upload: img/(.*)
     secure: always
     expiration: "30d"

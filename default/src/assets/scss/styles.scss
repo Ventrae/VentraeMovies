@@ -1,1 +1,25 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+body {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #242428;
+  @media screen and (min-width: 1200px) {
+    background-size: cover !important;
+    background-position: initial;
+  }
+}
+body.page-index {
+  background-image: url('../img/bg-index.jpg');
+  h1 {
+    font-family: 'Raleway', sans-serif;
+  }
+}
+body.page-browse {
+  background-image: url('../img/bg-browse.jpg');
+}
+body.page-reviewed {
+  background-image: url('../img/bg-reviewed.jpg');
+}
+body.page-account {
+  background-image: url('../img/bg-account.jpg');
+}

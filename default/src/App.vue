@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <nav></nav>
+    <router-view name="navbar"/>
     <router-view/>
+    <router-view name="footer"/>
   </div>
 </template>
 
-<style scoped>
+<style>
 
 </style>

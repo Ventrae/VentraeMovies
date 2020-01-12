@@ -1,10 +1,13 @@
 <template>
-    
+    <div></div>
 </template>
 
 <script>
     export default {
-        name: "Reviewed"
+        name: "Reviewed",
+        beforeCreate() {
+            document.body.className = 'page-reviewed';
+        }
     }
 </script>
 
