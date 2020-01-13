@@ -17,6 +17,8 @@ import Account from '@/views/Account.vue';
 
 Vue.use(VueRouter);
 
+let enableGuards = false;
+
 const routes = [
   {
     path: '/',
@@ -33,14 +35,17 @@ const routes = [
       default: Browse,
       navbar: navbar
     },
-    /*beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
-      if(store.state.user.token != ''){
-        next();
+    beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
+      if(enableGuards){
+        if(store.state.user.token != ''){
+          next();
+        }
+        else {
+          next({name: 'index'});
+        }
       }
-      else {
-        next({name: 'index'});
-      }
-    }*/
+      else next();
+    }
   },
   {
     path: '/reviewed',
@@ -49,14 +54,17 @@ const routes = [
       default: Reviewed,
       navbar: navbar
     },
-    /*beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
-      if(store.state.user.token != ''){
-        next();
+    beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
+      if(enableGuards){
+        if(store.state.user.token != ''){
+          next();
+        }
+        else {
+          next({name: 'index'});
+        }
       }
-      else {
-        next({name: 'index'});
-      }
-    }*/
+      else next();
+    }
   },
   {
     path: '/account',
@@ -65,14 +73,17 @@ const routes = [
       default: Account,
       navbar: navbar
     },
-    /*beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
-      if(store.state.user.token != ''){
-        next();
+    beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
+      if(enableGuards){
+        if(store.state.user.token != ''){
+          next();
+        }
+        else {
+          next({name: 'index'});
+        }
       }
-      else {
-        next({name: 'index'});
-      }
-    }*/
+      else next();
+    }
   },
   {
     path: '/movie/:id',
@@ -81,14 +92,17 @@ const routes = [
       default: Movie,
       navbar: navbar
     },
-    /*beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
-      if(store.state.user.token != ''){
-        next();
+    beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
+      if(enableGuards){
+        if(store.state.user.token != ''){
+          next();
+        }
+        else {
+          next({name: 'index'});
+        }
       }
-      else {
-        next({name: 'index'});
-      }
-    }*/
+      else next();
+    }
   }
 ];
 
