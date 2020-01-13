@@ -2,7 +2,7 @@
     <mdb-container class="my-5">
 
         <mdb-row>
-            <mdb-col col="col-11 col-lg-5" class="mx-auto">
+            <mdb-col col="col-11 col-lg-4" class="mx-auto">
                 <mdb-card>
                     <mdb-card-body>
                         <transition name="fade" mode="out-in">
@@ -33,18 +33,6 @@
     }
 </script>
 
-<style>
-    .fade-enter {
-        opacity: 0;
-    }
-    .fade-enter-active {
-        transition: opacity .3s ease-in;
-    }
-    .fade-leave {
+<style scoped>
 
-    }
-    .fade-leave-active {
-        opacity: 0;
-        transition: opacity .3s ease-in;
-    }
 </style>

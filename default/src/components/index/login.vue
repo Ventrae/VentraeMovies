@@ -63,7 +63,7 @@
                         .then(
                             response => {
                                 if(response.status === 200){
-                                    localStorage.token = response.body;
+                                    this.$store.state.user.token = response.body;
                                     this.$router.push('/browse');
                                 }
                                 else {
