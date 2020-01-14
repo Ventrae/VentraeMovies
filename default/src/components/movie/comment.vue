@@ -2,7 +2,7 @@
     <mdb-col col="10" class="mx-auto my-3">
         <mdb-card :style="positiveStyle">
             <mdb-card-body>
-                <mdb-card-title tag="p" class="h5 mb-0">{{ text }}</mdb-card-title>
+                <mdb-card-title tag="p" class="text-justify mb-0">{{ text }}</mdb-card-title>
                 <hr class="my-1"/>
                 <p class="font-small text-muted mb-0">{{ author }} | {{ time }}</p>
             </mdb-card-body>

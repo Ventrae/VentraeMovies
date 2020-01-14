@@ -3,15 +3,20 @@
 
         <mdb-container>
             <mdb-jumbotron class="mb-0 d-flex p-4 justify-content-between align-items-center bg-dark">
-                <h3 class="h4 text-light m-0">
-                    {{ movie.title }}
-                    <span class="h6 text-muted">
-                        | {{ movie.id }}
-                    </span>
-                </h3>
+                <div class="d-flex align-items-center">
+                    <a href="#" class="my-0 mr-3 text-white" @click="$router.go(-1)">
+                        <i class="fa fa-chevron-left mr-1"></i>
+                    </a>
+                    <h3 class="h4 text-light m-0">
+                        {{ movie === null ? '' : movie.title }}
+                        <span class="h6 text-muted">
+                            | {{ movie === null ? '' : movie.id }}
+                        </span>
+                    </h3>
+                </div>
 
                 <div class="h4 text-light m-0">
-                    {{ movie.rating }} / 10
+                    {{ movie === null ? '' : movie.rating }} / 10
                     <i class="fas fa-star text-warning"></i>
                 </div>
             </mdb-jumbotron>
@@ -33,7 +38,6 @@
                         <mdb-badge class="ml-1" :color="genreColor(genre)" v-for="genre in movie.genres">
                             {{ genre }}
                         </mdb-badge>
-
                     </p>
 
                     <p v-if="movie.companies.length">
@@ -46,7 +50,7 @@
 
                     <hr class="my-4"/>
 
-                    <p>
+                    <p v-if="movie !== null">
                         Opis: {{ movie.description }}
                     </p>
 
@@ -85,7 +89,7 @@
                     <figure class="text-center">
                         <img
                                 width="230"
-                                :alt="movie.title"
+                                :alt="actor.name"
                                 :src="actor.image"
                                 class="mx-auto mb-2"
                                 v-if="actor.image"
@@ -110,18 +114,14 @@
             </h4>
 
             <comment
-                    :text="i%2 ? 'Chujowy film nie polecam strata czasu' : 'Arcydzieło współczesnej kinematografii'"
-                    :author="'ventrae@gmail.com'"
+                    :text="review.content"
+                    :author="review.author"
                     :time="'12 października 2019r.'"
-                    :if-positive="!(i%2)"
-                    v-for="i in [1,2,3,4,5,6,7,8,9]"
+                    :if-positive="!(index%2)"
+                    v-for="(review, index) of movie.reviews"
             />
 
         </mdb-container>
-
-        <mdb-btn class="mt-4 mx-0" gradient="blue" size="lg" @click="$router.go(-1)">
-            <i class="fa fa-chevron-left mr-2"></i> Wróć
-        </mdb-btn>
 
     </div>
 </template>
@@ -158,8 +158,7 @@
             },
             async getCast(id) {
                 let url = 'https://api.themoviedb.org/3/movie/' + id + '/credits?api_key=ae3d804c4aed5b48745ca5d2de0c0294';
-                console.log('dupa');
-                this.$http.get(url)
+                return await this.$http.get(url)
                     .then(response => {
                         let x = [];
                         let cast = response.body.cast;
@@ -167,10 +166,9 @@
                         for (let actor of cast) {
                             if (i === 10) {
                                 break;
-                            } else {
-                                x.push(
-                                    new Actor(actor.id, actor.character, actor.name, actor.profile_path)
-                                );
+                            }
+                            else {
+                                x.push(new Actor(actor.id, actor.character, actor.name, actor.profile_path));
                                 i++;
                             }
                         }
@@ -179,8 +177,8 @@
             },
             async getReviews(id) {
                 let url = 'https://api.themoviedb.org/3/movie/' + id + '/reviews?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US&page=1';
-                this.$http.get(url)
-                    .then(async response => {
+                return await this.$http.get(url)
+                    .then(response => {
                         let x = [];
                         let reviews = response.body.results;
                         for (let review of reviews) {
@@ -188,15 +186,14 @@
                                 new Review(review.id, review.author, review.content)
                             );
                         }
+                        return x;
                     });
-                return x;
             },
             requestData(id) {
                 let url = 'https://api.themoviedb.org/3/movie/' + id + '?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=pl-PL';
                 this.$http.get(url)
                     .then(
                         response => {
-                            console.log('requestuje dane filmu ' + id);
                             let res = response.body;
                             let y = {
                                 id: res.id,
@@ -218,15 +215,8 @@
                             x.minutes = res.runtime;
                             x.language = res.original_language;
                             this.movie = x;
-                            const cast = this.getCast(this.id).then(cast => {
-                                return cast;
-                            });
-                            const reviews = this.getReviews(this.id).then(reviews => {
-                                return reviews;
-                            });
-                            this.movie.cast = cast;
-                            this.movie.reviews = reviews;
-                            console.log(this.movie);
+                            this.getCast(this.id).then(cast => { this.movie.cast = cast;});
+                            this.getReviews(this.id).then(reviews => {this.movie.reviews = reviews;});
                         },
                         error => {
                             console.log(error);
