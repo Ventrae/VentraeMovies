@@ -21,7 +21,7 @@
                 </div>
             </mdb-jumbotron>
 
-            <mdb-jumbotron class="mb-0 d-flex pl-0 pr-4 py-0 align-items-center" fluid>
+            <mdb-jumbotron class="mb-0 d-flex pl-0 pr-4 py-0 align-items-center" style="background-color: #f3f3f3" fluid>
 
                 <div>
                     <img
@@ -65,7 +65,15 @@
                         </b>
                     </div>
 
-                    <rate-movie/>
+                    <star-rating
+                            :increment="0.1"
+                            :max-rating="10"
+                            :round-start-rating="false"
+                            v-model="userRating"
+                            inactive-color="#abb8ed"
+                            active-color="#5771db"
+                            @rating-selected="rateMovie(userRating)"
+                    />
 
                 </div>
 
@@ -128,21 +136,25 @@
 
 <script>
     import Movie from "@/models/Movie";
-    import RateMovie from "@/components/movie/rateMovie";
     import Actor from "@/models/Actor";
     import Comment from "@/components/movie/comment";
     import Review from "@/models/Review";
+    import StarRating from 'vue-star-rating'
 
     export default {
         name: "movie",
-        components: {Comment, RateMovie},
+        components: {Comment, StarRating},
         data() {
             return {
                 id: this.$route.params.id,
-                movie: null
+                movie: null,
+                userRating: 0
             }
         },
         methods: {
+            rateMovie(rating){
+              alert('Oceniam film "'+this.movie.title+'" na '+rating+'/10');
+            },
             genreColor(genre) {
 
                 let red_genres = ['Kryminał', 'Akcja', 'Horror', 'Romans'];
