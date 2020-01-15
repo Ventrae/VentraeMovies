@@ -63,7 +63,9 @@
                         .then(
                             response => {
                                 if(response.status === 200){
-                                    this.$store.state.user.token = response.body;
+                                    this.$store.state.user.id = response.body.id;
+                                    this.$store.state.user.token = response.body.token;
+                                    this.$store.state.user.email = response.body.email;
                                     this.$router.push('/browse');
                                 }
                                 else {

@@ -66,7 +66,8 @@
                     </div>
 
                     <star-rating
-                            :increment="0.1"
+                            :increment="0.5"
+                            :fixed-points="1"
                             :max-rating="10"
                             :round-start-rating="false"
                             v-model="userRating"
@@ -153,7 +154,12 @@
         },
         methods: {
             rateMovie(rating){
-              alert('Oceniam film "'+this.movie.title+'" na '+rating+'/10');
+                console.log('User: '+this.$store.state.user.email);
+                console.log('Id: '+this.$store.state.user.id);
+                console.log('Token: '+this.$store.state.user.token);
+                console.log('Ocenia film: '+this.movie.title);
+                console.log('Film id: '+this.movie.id);
+                console.log('Na: '+rating+'/10');
             },
             genreColor(genre) {
 

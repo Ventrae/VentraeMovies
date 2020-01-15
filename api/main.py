@@ -44,7 +44,12 @@ def login():
                 'token': token,
                 'email': user.to_dict()['email']
             })
-            return jsonify(token), 200
+            result = {
+        		'id': user.id,
+        		'token': token,
+        		'email': email
+            }
+            return jsonify(result), 200
     return 'Wrong email or password', 400
 
 @app.route('/api/logout', methods=['POST'])

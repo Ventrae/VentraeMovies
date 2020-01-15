@@ -6,7 +6,9 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     user: {
-      token: ''
+      id: '',
+      token: '',
+      email: ''
     }
   },
   mutations: {
