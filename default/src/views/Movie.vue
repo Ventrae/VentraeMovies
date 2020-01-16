@@ -54,7 +54,6 @@
                         Opis: {{ movie.description }}
                     </p>
 
-
                     <div class="d-flex">
                         <b v-if="movie.release !== null">
                             Premiera: {{ movie.release }}r.
@@ -83,7 +82,6 @@
             <hr/>
 
         </mdb-container>
-
 
         <mdb-jumbotron class="mb-0 d-flex p-4 flex-column align-items-center bg-dark px-0 container-fluid">
 
@@ -117,7 +115,9 @@
         </mdb-jumbotron>
 
         <mdb-container>
+
             <hr/>
+
             <h4 class="my-3">
                 Recenzje:
             </h4>
@@ -153,6 +153,18 @@
             }
         },
         methods: {
+            async getRating(id) {
+                let url = '';
+                let body = {
+                    'user': this.$store.state.user.id,
+                    'movie': this.id
+                };
+                return await this.$http.post(url, body)
+                    .then(response => {
+                            return response.body.rating;
+                    }
+                )
+            },
             rateMovie(rating){
                 let url = "https://projektarc.appspot.com/api/rate";
                 let body = {
@@ -243,6 +255,7 @@
                             this.movie = x;
                             this.getCast(this.id).then(cast => { this.movie.cast = cast;});
                             this.getReviews(this.id).then(reviews => {this.movie.reviews = reviews;});
+                            this.getRating(this.id).then(rating => {this.userRating = rating;});
                         },
                         error => {
                             console.log(error);

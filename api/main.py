@@ -128,6 +128,24 @@ def rate():
         db.collection(u'Ratings').document(a[0]["id"]).set(rating)
     return "Successfully rated a movie", 200
 
+@app.route("/api/rating", methods=["POST"])
+def getRating():
+    data = request.json
+    rating = 0
+
+    query_ref = db.collection(u'Ratings').where("user", "==", data.get('user')).where("movie", "==", data.get('movie'))
+    docs = query_ref.stream()
+
+    a=[]
+    for o in docs:
+        a.append({"id":o.id,"data":o.to_dict()})
+
+    if not a:
+        rating = 0
+    else:
+        rating = db.collection(u'Ratings').document(a[0]["rating"])
+    return jsonify(rating), 200
+
 # @app.route("/api/mail", methods=["GET"])
 # def f_mail():
 #     client = tasks_v2.CloudTasksClient()
