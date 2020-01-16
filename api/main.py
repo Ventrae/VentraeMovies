@@ -98,10 +98,35 @@ def register():
     db.collection(u'Users').add(data)
     return 'Success', 200
 
-@app.route("/api/movies/", methods=["GET"])
-def movies():
+@app.route("/api/recomendations/<id>", methods=["GET"])
+def recomend():
     url = "https://api.themoviedb.org/3/movie/578?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=pl-PL"
     return jsonify(url), 200
+
+@app.route("/api/rate", methods=["POST"])
+def rate():
+    data = request.json
+    rateTime = time.time()
+    dtObject = datetime.fromtimestamp(rateTime)
+    rating = {
+        'user': data.get('user'),
+        'movie': data.get('movie'),
+        'rate': data.get('rating'),
+        'time': dtObject,
+    }
+
+    query_ref = db.collection(u'Ratings').where("user", "==", data.get('user')).where("movie", "==", data.get('movie'))
+    docs = query_ref.stream()
+
+    a=[]
+    for o in docs:
+        a.append({"id":o.id,"data":o.to_dict()})
+
+    if not a:
+        db.collection(u'Ratings').add(rating)
+    else:
+        db.collection(u'Ratings').document(a[0]["id"]).set(rating)
+    return "Successfully rated a movie", 200
 
 # @app.route("/api/mail", methods=["GET"])
 # def f_mail():

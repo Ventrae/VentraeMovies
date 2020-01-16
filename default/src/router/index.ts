@@ -17,7 +17,7 @@ import Account from '@/views/Account.vue';
 
 Vue.use(VueRouter);
 
-let enableGuards = false;
+let enableGuards = true;
 
 const routes = [
   {

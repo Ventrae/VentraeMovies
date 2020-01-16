@@ -154,12 +154,20 @@
         },
         methods: {
             rateMovie(rating){
-                console.log('User: '+this.$store.state.user.email);
-                console.log('Id: '+this.$store.state.user.id);
-                console.log('Token: '+this.$store.state.user.token);
-                console.log('Ocenia film: '+this.movie.title);
-                console.log('Film id: '+this.movie.id);
-                console.log('Na: '+rating+'/10');
+                let url = "https://projektarc.appspot.com/api/rate";
+                let body = {
+                    'user':this.$store.state.user.id,
+                    'movie':this.movie.id,
+                    'rating':rating
+                };
+                this.$http.post(url, body).then(
+                    response => {
+                        console.log(response);
+                    },
+                    error => {
+                        console.error(error);
+                    }
+                )
             },
             genreColor(genre) {
 
