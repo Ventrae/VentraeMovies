@@ -154,14 +154,10 @@
         },
         methods: {
             async getRating(id) {
-                let url = '';
-                let body = {
-                    'user': this.$store.state.user.id,
-                    'movie': this.id
-                };
-                return await this.$http.post(url, body)
+                let url = 'https://projektarc.appspot.com/api/rating?movie='+this.id+'&user='+this.$store.state.user.id;
+                return await this.$http.get(url)
                     .then(response => {
-                            return response.body.rating;
+                            return response.body;
                     }
                 )
             },

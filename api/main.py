@@ -128,22 +128,20 @@ def rate():
         db.collection(u'Ratings').document(a[0]["id"]).set(rating)
     return "Successfully rated a movie", 200
 
-@app.route("/api/rating", methods=["POST"])
+@app.route("/api/rating", methods=["GET"])
 def getRating():
-    data = request.json
+    user = request.args["user"]
+    movie = request.args["movie"]
     rating = 0
-
-    query_ref = db.collection(u'Ratings').where("user", "==", data.get('user')).where("movie", "==", data.get('movie'))
+    query_ref = db.collection(u'Ratings').where(u"user", u"==", user).where(u"movie", u"==", int(movie))
     docs = query_ref.stream()
-
     a=[]
     for o in docs:
-        a.append({"id":o.id,"data":o.to_dict()})
-
+        a.append(o.id)
     if not a:
         rating = 0
     else:
-        rating = db.collection(u'Ratings').document(a[0]["rating"])
+        rating = db.collection(u'Ratings').document(a[0]).get().to_dict()["rate"]
     return jsonify(rating), 200
 
 # @app.route("/api/mail", methods=["GET"])
