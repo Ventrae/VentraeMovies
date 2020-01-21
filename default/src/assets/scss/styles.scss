@@ -25,45 +25,8 @@ body.page-index {
 }
 body.page-browse {
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6)), url('../img/bg-browse.jpg') bottom;
-
-  .movie-poster {
-    position: relative;
-    width: 260px;
-    overflow: hidden;
-    cursor: pointer;
-    img {
-      width: 100%;
-      height: 100%;
-      transform-origin: 50% 50%;
-      transition: transform .75s, visibility .25s ease-in-out;
-    }
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      color: #FFF;
-      text-align: center;
-      transition: display .2s .05s ease-in;
-      font-family: 'Raleway', sans-serif;
-      font-weight: bold;
-    }
-    &:hover img {
-      filter: blur(2px);
-      transform: scale(1.1);
-    }
-    &:hover .overlay {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0, 0, 0, .6);
-    }
-  }
-
 }
-body.page-reviewed {
+body.page-recommendations {
   background-image: url('../img/bg-reviewed.jpg');
 }
 body.page-account {
@@ -71,4 +34,40 @@ body.page-account {
 }
 body.page-movie {
   background-image: url('../img/bg-account.jpg');
+}
+
+.movie-poster {
+  position: relative;
+  width: 260px;
+  overflow: hidden;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+    transition: transform .75s, visibility .25s ease-in-out;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    color: #FFF;
+    text-align: center;
+    transition: display .2s .05s ease-in;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+  }
+  &:hover img {
+    filter: blur(2px);
+    transform: scale(1.1);
+  }
+  &:hover .overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, .6);
+  }
 }

@@ -13,10 +13,9 @@
     import Movie from "@/models/Movie";
 
     export default {
-        name: "movie",
+        name: "poster",
         props: {
             movie: {
-                type: Movie,
                 required: true
             }
         },

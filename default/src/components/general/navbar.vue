@@ -13,8 +13,8 @@
                     </router-link>
                 </mdb-nav-item>
                 <mdb-nav-item>
-                    <router-link to="/reviewed" class="nav-link py-0">
-                        Recenzje
+                    <router-link to="/recommendations" class="nav-link py-0">
+                        Rekomendacje
                     </router-link>
                 </mdb-nav-item>
                 <mdb-nav-item>

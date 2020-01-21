@@ -4,12 +4,16 @@ import secrets
 import hashlib
 import json
 import time
+import requests
 from datetime import datetime
 
 db = firestore.Client()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "432de2a86dab9bf1781b484f3199620d712bc61c533f8d0c0c6a62b3003713e28796e4418a5884c55584ea0b8d23ca3f02dc"
     
+def compareMovies(e):
+  return e["rate"]
+
 @app.route("/api/login", methods=["POST"])
 def login():
     email = request.json.get('email')
@@ -98,10 +102,31 @@ def register():
     db.collection(u'Users').add(data)
     return 'Success', 200
 
-@app.route("/api/recomendations/<id>", methods=["GET"])
+@app.route("/api/recommendations", methods=["GET"])
 def recomend():
-    url = "https://api.themoviedb.org/3/movie/578?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=pl-PL"
-    return jsonify(url), 200
+
+    user = request.args["user"]
+    query_ref = db.collection("Ratings").where("user", "==", user)
+
+    # ogarnąć limitowanie do x requestów
+    ratings = []
+    for e in query_ref.stream():
+        ratings.append(e.to_dict())
+    ratings.sort(key=compareMovies)
+
+    recommendations = []
+    url = "https://api.themoviedb.org/3/movie/{}/similar?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US&page=1"
+    for e in ratings:
+        response = requests.request("GET", url.format(e["movie"]))
+        body = json.loads(response.text)
+        for sm in body["results"]:
+            recommendations.append({
+                'movie': sm["id"],
+                'poster': 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + sm["poster_path"],
+                'title': sm["title"]
+            })
+            
+    return jsonify(recommendations), 200
 
 @app.route("/api/rate", methods=["POST"])
 def rate():

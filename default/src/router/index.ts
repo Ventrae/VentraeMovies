@@ -11,7 +11,7 @@ import Movie from '@/views/Movie.vue';
 
 import Browse from '@/views/Browse.vue';
 
-import Reviewed from '@/views/Reviewed.vue';
+import Recommendations from '@/views/Recommendations.vue';
 
 import Account from '@/views/Account.vue';
 
@@ -48,10 +48,10 @@ const routes = [
     }
   },
   {
-    path: '/reviewed',
-    name: 'reviewed',
+    path: '/recommendations',
+    name: 'recommendations',
     components: {
-      default: Reviewed,
+      default: Recommendations,
       navbar: navbar
     },
     beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
