@@ -112,7 +112,7 @@ def recomend():
     ratings = []
     for e in query_ref.stream():
         ratings.append(e.to_dict())
-    ratings.sort(key=compareMovies)
+    ratings.sort(key=compareMovies, reverse=True)
 
     recommendations = []
     url = "https://api.themoviedb.org/3/movie/{}/similar?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US&page=1"
