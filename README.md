@@ -1,7 +1,5 @@
 # VentraeMovies
 
----
-
 System rekomendacji filmów, bada gust użytkownika i rekomenduje filmy na podstawie ocen użytkownika. System stworzony w architekturze mikroserwisów. Serwis `default` to SPA napisana we frameworku Vue.js, a `api` to aplikacja pythonowa napisana we frameworku Flask. Wdrożone na chmurze Google Cloud Platform.
 
 ##### Projekt dostępny pod adresem: https://projektarc.appspot.com/#/
