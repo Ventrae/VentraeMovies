@@ -5,14 +5,11 @@
 
         <hr/>
 
-        <label for="register_email" class="grey-text mb-1">Adres e-mail:</label>
-        <input type="email" id="register_email" class="form-control mb-2" v-model="email"/>
+        <mdb-input type="email" label="Adres e-mail" class="mb-1" outline v-model="email"></mdb-input>
 
-        <label for="register_password_a" class="grey-text mb-1">Hasło:</label>
-        <input type="password" id="register_password_a" class="form-control mb-2" v-model="password_a"/>
+        <mdb-input type="password" label="Hasło" class="mb-1" outline v-model="password_a"></mdb-input>
 
-        <label for="register_password_b" class="grey-text mb-1">Powtórz hasło:</label>
-        <input type="password" id="register_password_b" class="form-control" v-model="password_b"/>
+        <mdb-input type="password" label="Powtórz hasło" class="mb-1" outline v-model="password_b"></mdb-input>
 
         <div class="text-center mt-3">
             <mdb-btn type="submit" gradient="blue">Zarejestruj</mdb-btn>

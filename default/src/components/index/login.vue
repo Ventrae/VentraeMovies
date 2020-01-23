@@ -3,11 +3,11 @@
 
         <h1 class="flex-center my-0">VentraeMovies</h1>
         <hr/>
-            <label for="login_email" class="grey-text mb-1">Adres e-mail:</label>
-            <input type="email" id="login_email" class="form-control mb-2" v-model="email"/>
 
-            <label for="login_password" class="grey-text mb-1">Hasło:</label>
-            <input type="password" id="login_password" class="form-control" v-model="password"/>
+            <mdb-input type="email" label="Adres e-mail" outline v-model="email"/>
+
+            <mdb-input type="password" label="Hasło" outline v-model="password"/>
+
         <div class="text-center mt-3">
             <mdb-btn type="submit" gradient="blue">Zaloguj</mdb-btn>
         </div>
