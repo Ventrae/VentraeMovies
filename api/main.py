@@ -197,55 +197,48 @@ def getRatingsList():
     return jsonify(ratings_full), 200
 
 
-# @app.route("/api/mail", methods=["GET"])
-# def f_mail():
-#     client = tasks_v2.CloudTasksClient()
-#     parent = client.queue_path("sandbox-264214", "europe-west3", "mail")
-#     payload = json.dumps(people, ensure_ascii=False).encode()
-#     task = {
-#         "app_engine_http_request": {
-#             "http_method": "POST",
-#             "app_engine_routing": {
-#                 "service": "tasks-worker"
-#             },
-#             "relative_uri": "/tasks/mail",
-#             "headers": {
-#                 "Content-Type": "application/json"
-#             },
-#             "body": payload
-#         }
-#     }
-#     client.create_task(parent, task)
-#     return "Wysłano maila z listą osób", 200
+@app.route("/api/mail", methods=["GET"])
+def mail():
 
+    user = request.args["user"]
+    query_ref = db.collection("Ratings").where("user", "==", user)
 
-# @app.route("/api/movies/", methods=["GET"])
-# def f_people():
-#     if "logged" in session:
-#         if session["logged"] == True:
-#             return jsonify(people), 200
-#         else:
-#             session["logged"] = False
-#             return "Użytkownik niezalogowany", 401
-#     else:
-#         session["logged"] = False
-#         return "Użytkownik niezalogowany", 401
+    # ogarnąć limitowanie do x requestów
+    ratings = []
+    for e in query_ref.stream():
+        ratings.append(e.to_dict())
+    ratings.sort(key=compareMovies, reverse=True)
 
+    recommendations = []
+    url = "https://api.themoviedb.org/3/movie/{}/similar?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US&page=1"
+    for e in ratings:
+        response = requests.request("GET", url.format(e["movie"]))
+        body = json.loads(response.text)
+        for sm in body["results"]:
+            recommendations.append({
+                'movie': sm["id"],
+                'poster': 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + sm["poster_path"],
+                'title': sm["title"]
+            })
 
-# @app.route("/api/movies/<id>", methods=["GET"])
-# def f_person(id):
-#     if "logged" in session:
-#         if session["logged"] == True:
-#             if int(id) < people.__len__():
-#                 return jsonify(people[int(id)]), 200
-#             else:
-#                 return redirect("/api/people/", code=302)
-#         else:
-#             session["logged"] = False
-#             return "Użytkownik niezalogowany", 401
-#     else:
-#         session["logged"] = False
-#         return "Użytkownik niezalogowany", 401
+    client = tasks_v2.CloudTasksClient()
+    parent = client.queue_path("projektarc", "europe-west3", "mail")
+    payload = json.dumps(recommendations, ensure_ascii=False).encode()
+    task = {
+        "app_engine_http_request": {
+            "http_method": "POST",
+            "app_engine_routing": {
+                "service": "tasks-worker"
+            },
+            "relative_uri": "/tasks/mail",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": payload
+        }
+    }
+    client.create_task(parent, task)
+    return "Wysłano maila z rekomendowanymi filmami", 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
