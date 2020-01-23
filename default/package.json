@@ -28,5 +28,10 @@
     "typescript": "~3.5.3",
     "vue-cli-plugin-mdb": "^2.0.3",
     "vue-template-compiler": "^2.6.10"
+  },
+  "babel": {
+    "presets": [
+      "@vue/cli-plugin-babel/preset"
+    ]
   }
 }
