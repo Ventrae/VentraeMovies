@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import Recommended from "@/components/reviewed/recommended";
+    import Recommended from "@/components/recommendations/recommended";
     export default {
         name: "Recommendations",
         components: {Recommended},

@@ -15,9 +15,11 @@ import Recommendations from '@/views/Recommendations.vue';
 
 import Account from '@/views/Account.vue';
 
+import Reviews from '@/views/Reviews.vue';
+
 Vue.use(VueRouter);
 
-let enableGuards = true;
+let enableGuards = false;
 
 const routes = [
   {
@@ -52,6 +54,25 @@ const routes = [
     name: 'recommendations',
     components: {
       default: Recommendations,
+      navbar: navbar
+    },
+    beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
+      if(enableGuards){
+        if(store.state.user.token != ''){
+          next();
+        }
+        else {
+          next({name: 'index'});
+        }
+      }
+      else next();
+    }
+  },
+  {
+    path: '/reviewed',
+    name: 'reviewed',
+    components: {
+      default: Reviews,
       navbar: navbar
     },
     beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){

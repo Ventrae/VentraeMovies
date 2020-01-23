@@ -18,6 +18,11 @@
                     </router-link>
                 </mdb-nav-item>
                 <mdb-nav-item>
+                    <router-link to="/reviewed" class="nav-link py-0">
+                        Ocenione
+                    </router-link>
+                </mdb-nav-item>
+                <mdb-nav-item>
                     <router-link to="/account" class="nav-link py-0">
                         Konto
                     </router-link>

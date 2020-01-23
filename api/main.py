@@ -169,6 +169,34 @@ def getRating():
         rating = db.collection(u'Ratings').document(a[0]).get().to_dict()["rate"]
     return jsonify(rating), 200
 
+@app.route("/api/ratings", methods=["GET"])
+def getRatingsList():
+
+    user = request.args["user"]
+    query_ref = db.collection("Ratings").where("user", "==", user)
+
+    # ogarnąć limitowanie do x requestów
+    ratings = []
+    for e in query_ref.stream():
+        ratings.append(e.to_dict())
+    ratings.sort(key=compareMovies, reverse=True)
+
+    ratings_full = []
+    url = "https://api.themoviedb.org/3/movie/{}?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US"
+    for e in ratings:
+        response = requests.request("GET", url.format(e["movie"]))
+        body = json.loads(response.text)
+        print(e)
+        ratings_full.append({
+            'id': int(body["id"]),
+            'title': body["title"],
+            'rating': float(e["rate"]),
+            'poster': 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + body["poster_path"]
+        })
+            
+    return jsonify(ratings_full), 200
+
+
 # @app.route("/api/mail", methods=["GET"])
 # def f_mail():
 #     client = tasks_v2.CloudTasksClient()
