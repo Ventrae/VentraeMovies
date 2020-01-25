@@ -95,8 +95,8 @@ def register():
     data = {
         'email': email,
         'password': password.hexdigest(),
-        'activated' : False,
-        'registrationTimeStamp' : dateTime_object,
+        'time' : dateTime_object,
+        'newsletter': True
     }
 
     db.collection(u'Users').add(data)
@@ -106,9 +106,9 @@ def register():
 def recomend():
 
     user = request.args["user"]
-    query_ref = db.collection("Ratings").where("user", "==", user)
+    # limitowane do rekomendacji do 10 filmów (najlepiej ocenionych, najbardziej ostatnio)
+    query_ref = db.collection("Ratings").where("user", "==", user).order_by(u'rate', direction=firestore.Query.DESCENDING).order_by(u'time', direction=firestore.Query.DESCENDING).limit(10)
 
-    # ogarnąć limitowanie do x requestów
     ratings = []
     for e in query_ref.stream():
         ratings.append(e.to_dict())
@@ -126,7 +126,15 @@ def recomend():
                 'title': sm["title"]
             })
             
-    return jsonify(recommendations), 200
+    seen = set()
+    reccs_no_dupes = []
+    for d in recommendations:
+        t = tuple(d.items())
+        if t not in seen:
+            seen.add(t)
+            reccs_no_dupes.append(d)
+
+    return jsonify(reccs_no_dupes), 200
 
 @app.route("/api/rate", methods=["POST"])
 def rate():
@@ -173,9 +181,8 @@ def getRating():
 def getRatingsList():
 
     user = request.args["user"]
-    query_ref = db.collection("Ratings").where("user", "==", user)
-
-    # ogarnąć limitowanie do x requestów
+    # limitowane do 20 ratingów
+    query_ref = db.collection("Ratings").where("user", "==", user).order_by(u"time", direction=firestore.Query.DESCENDING).limit(20)
     ratings = []
     for e in query_ref.stream():
         ratings.append(e.to_dict())
@@ -201,9 +208,9 @@ def getRatingsList():
 def mail():
 
     user = request.args["user"]
-    query_ref = db.collection("Ratings").where("user", "==", user)
+    # limitowane do rekomendacji do 5 filmów (najlepiej ocenionych, najbardziej ostatnio)
+    query_ref = db.collection("Ratings").where("user", "==", user).order_by(u'rate', direction=firestore.Query.DESCENDING).order_by(u'time', direction=firestore.Query.DESCENDING).limit(5)
 
-    # ogarnąć limitowanie do x requestów
     ratings = []
     for e in query_ref.stream():
         ratings.append(e.to_dict())
@@ -220,10 +227,18 @@ def mail():
                 'poster': 'https://image.tmdb.org/t/p/w600_and_h900_bestv2' + sm["poster_path"],
                 'title': sm["title"]
             })
+            
+    seen = set()
+    reccs_no_dupes = []
+    for d in recommendations:
+        t = tuple(d.items())
+        if t not in seen:
+            seen.add(t)
+            reccs_no_dupes.append(d)
 
     client = tasks_v2.CloudTasksClient()
     parent = client.queue_path("projektarc", "europe-west3", "mail")
-    payload = json.dumps(recommendations, ensure_ascii=False).encode()
+    payload = json.dumps(reccs_no_dupes, ensure_ascii=False).encode()
     task = {
         "app_engine_http_request": {
             "http_method": "POST",

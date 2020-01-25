@@ -1,0 +1,6 @@
+runtime: python37
+instance_class: F1
+service: cron-worker
+handlers:
+  - url: /tasks/cron/.*
+    script: auto

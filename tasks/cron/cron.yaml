@@ -1,0 +1,5 @@
+cron:
+- description: "Send email with recommended movies to all users who agree for newsletter"
+  url: /tasks/cron/newsletter
+  target: cron-worker
+  schedule: every 24 hours
