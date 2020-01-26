@@ -130,6 +130,8 @@
                     v-for="(review, index) of movie.reviews"
             />
 
+            <add-comment />
+
         </mdb-container>
 
     </div>
@@ -141,10 +143,11 @@
     import Comment from "@/components/movie/comment";
     import Review from "@/models/Review";
     import StarRating from 'vue-star-rating'
+    import AddComment from "@/components/movie/addComment";
 
     export default {
         name: "movie",
-        components: {Comment, StarRating},
+        components: {AddComment, Comment, StarRating},
         data() {
             return {
                 id: this.$route.params.id,
@@ -166,6 +169,7 @@
                 let body = {
                     'user':this.$store.state.user.id,
                     'movie':this.movie.id,
+                    'title': this.movie.title,
                     'rating':rating
                 };
                 this.$http.post(url, body).then(

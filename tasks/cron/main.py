@@ -1,15 +1,31 @@
 from flask import Flask
 from google.cloud import firestore
-
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 db = firestore.Client()
 
+apiKey = "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" 
 
 @app.route("/tasks/cron/newsletter")
 def newsletter():
-	print('i cron it')
-	return 'croned', 200
+	query_ref = db.collection("Users").where("newsletter", "==", True)
+	user_emails = []
+	for e in query_ref.stream():
+		user_emails.append(e.to_dict()["email"])
+	
+	for email in user_emails:
+		message = Mail(
+			from_email="s16739@pjwstk.edu.pl",
+			to_emails=email,
+			subject="test-mail-vm",
+			html_content="testowy mail ventrae-movies"
+		)
+		sg = SendGridAPIClient(apiKey)
+		sg.send(message)
+
+	return 'Succesfully sent newsletter', 200
 
 
 if __name__ == "__main__":

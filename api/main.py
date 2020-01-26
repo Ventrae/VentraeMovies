@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, session, redirect, request
-from google.cloud import firestore, tasks_v2
+from google.cloud import firestore, tasks_v2, bigquery
 import secrets
 import hashlib
 import json
@@ -10,9 +10,8 @@ from datetime import datetime
 db = firestore.Client()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "432de2a86dab9bf1781b484f3199620d712bc61c533f8d0c0c6a62b3003713e28796e4418a5884c55584ea0b8d23ca3f02dc"
-    
-def compareMovies(e):
-  return e["rate"]
+
+# --- Account management endpoints: ---
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -102,6 +101,24 @@ def register():
     db.collection(u'Users').add(data)
     return 'Success', 200
 
+@app.route('/api/change-password', methods=['POST'])
+def changePassword():
+    return 'Password changed', 200
+
+@app.route('/api/change-email', methods=['POST'])
+def changeEmail():
+    return 'Email changed', 200
+
+@app.route('/api/toggle-newsletter', methods=['POST'])
+def toggleNewsletter():
+    return 'Newsletter preferences changed', 200
+
+@app.route('/api/delete-account', methods=['POST'])
+def deleteAccount():
+    return 'Account deleted', 200
+
+# --- Movies recommendations endpoints: ---
+
 @app.route("/api/recommendations", methods=["GET"])
 def recomend():
 
@@ -112,7 +129,6 @@ def recomend():
     ratings = []
     for e in query_ref.stream():
         ratings.append(e.to_dict())
-    ratings.sort(key=compareMovies, reverse=True)
 
     recommendations = []
     url = "https://api.themoviedb.org/3/movie/{}/similar?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US&page=1"
@@ -144,10 +160,11 @@ def rate():
     rating = {
         'user': data.get('user'),
         'movie': data.get('movie'),
+        'title': data.get('title'),
         'rate': data.get('rating'),
         'time': dtObject,
     }
-
+    
     query_ref = db.collection(u'Ratings').where("user", "==", data.get('user')).where("movie", "==", data.get('movie'))
     docs = query_ref.stream()
 
@@ -157,6 +174,17 @@ def rate():
 
     if not a:
         db.collection(u'Ratings').add(rating)
+        client = bigquery.Client()
+        table_ref = client.get_table("projektarc.BigQueryData.MoviesRatings")
+        ret = {
+            'user': data.get('user'),
+            'movie': data.get('movie'),
+            'title': data.get('title'),
+            'rate': data.get('rating'),
+            'time': rateTime,
+        }
+        rowns = client.insert_rows_json(table_ref, [ret])
+        print("BQ Errors:", rowns)
     else:
         db.collection(u'Ratings').document(a[0]["id"]).set(rating)
     return "Successfully rated a movie", 200
@@ -186,7 +214,6 @@ def getRatingsList():
     ratings = []
     for e in query_ref.stream():
         ratings.append(e.to_dict())
-    ratings.sort(key=compareMovies, reverse=True)
 
     ratings_full = []
     url = "https://api.themoviedb.org/3/movie/{}?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US"
@@ -203,7 +230,6 @@ def getRatingsList():
             
     return jsonify(ratings_full), 200
 
-
 @app.route("/api/mail", methods=["GET"])
 def mail():
 
@@ -214,7 +240,6 @@ def mail():
     ratings = []
     for e in query_ref.stream():
         ratings.append(e.to_dict())
-    ratings.sort(key=compareMovies, reverse=True)
 
     recommendations = []
     url = "https://api.themoviedb.org/3/movie/{}/similar?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US&page=1"
