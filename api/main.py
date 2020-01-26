@@ -280,5 +280,31 @@ def mail():
     client.create_task(parent, task)
     return "Wysłano maila z rekomendowanymi filmami", 200
 
+@app.route("/api/comment", methods=["GET"])
+def getComments():
+    movie = request.args["movie"]
+    query_ref = db.collection("Comments").where("movie","==",movie)
+
+    comments = []
+    for e in query_ref.stream():
+        comments.append(e.to_dict())
+    return jsonify(comments), 200
+
+@app.route("/api/comment", methods=["POST"])
+def addComment():
+    data = request.json
+    positivity = 0
+    # natural language api
+    comment = {
+        'author': data.get('author'),
+        'description': data.get('description'),
+        'positivity': positivity,
+        'date': data.get('date'),
+        'movie': data.get('movie')
+    }
+    db.collection("Comments").add(comment)
+    return "Succesfully added comment", 200
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
