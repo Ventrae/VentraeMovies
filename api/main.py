@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, session, redirect, request
-from google.cloud import firestore, tasks_v2, bigquery
+from google.cloud import firestore, tasks_v2, bigquery, language
+from google.cloud.language import enums, types
 import secrets
 import hashlib
 import json
@@ -293,14 +294,21 @@ def getComments():
 @app.route("/api/comment", methods=["POST"])
 def addComment():
     data = request.json
-    positivity = -1
-    # natural language api
+    rateTime = time.time()
+    dtObject = datetime.fromtimestamp(rateTime)
+    positivity = 0
+    client = language.LanguageServiceClient()
+
+    document = types.Document(content=data.get('content'),type=enums.Document.Type.PLAIN_TEXT)
+    sentiment = client.analyze_sentiment(document=document).document_sentiment
+    positivity = sentiment.score*100
+
     comment = {
         'author': data.get('author'),
         'content': data.get('content'),
-        'positivity': positivity,
-        'date': data.get('date'),
-        'movie': data.get('movie')
+        'positivity': round(positivity,0),
+        'time': dtObject,
+        'movie': int(data.get('movie'))
     }
     db.collection("Comments").add(comment)
     return "Succesfully added comment", 200
