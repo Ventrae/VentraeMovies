@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white col-12 col-md-6 mx-auto row border-secondary">
+    <div class="bg-white col-12 col-md-6 mx-auto row">
         <div class="col-11 col-md-8">
             <mdb-input type="textarea" label="Dodaj komentarz" outline :rows="2"/>
         </div>
