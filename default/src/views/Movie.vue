@@ -86,7 +86,7 @@
         <mdb-jumbotron class="mb-0 d-flex p-4 flex-column align-items-center bg-dark px-0 container-fluid">
 
             <h4 class="h4 text-light mb-4 align-self-start container">
-                Obsada
+                Obsada:
             </h4>
 
             <div class="row mx-auto container px-5">
@@ -119,18 +119,18 @@
             <hr/>
 
             <h4 class="my-3">
-                Recenzje:
+                Komentarze:
             </h4>
+
+            <add-comment />
 
             <comment
                     :text="review.content"
                     :author="review.author"
-                    :time="'12 października 2019r.'"
-                    :if-positive="!(index%2)"
-                    v-for="(review, index) of movie.reviews"
+                    :time="review.time"
+                    :positivity="review.positivity"
+                    v-for="review of movie.reviews"
             />
-
-            <add-comment />
 
         </mdb-container>
 
@@ -214,14 +214,15 @@
                     });
             },
             async getReviews(id) {
-                let url = 'https://api.themoviedb.org/3/movie/' + id + '/reviews?api_key=ae3d804c4aed5b48745ca5d2de0c0294&language=en-US&page=1';
+                let url = 'https://projektarc.appspot.com/api/comment?movie='+id;
                 return await this.$http.get(url)
                     .then(response => {
                         let x = [];
-                        let reviews = response.body.results;
+                        let reviews = response.body;
                         for (let review of reviews) {
+                            console.log(review.time);
                             x.push(
-                                new Review(review.id, review.author, review.content)
+                                new Review(review.id, review.author, review.content, review.positivity, review.time)
                             );
                         }
                         return x;
