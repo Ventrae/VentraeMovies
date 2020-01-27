@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, session, redirect, request
 from google.cloud import firestore, tasks_v2, bigquery, language
 from google.cloud.language import enums, types
+from datetime import datetime
 import secrets
 import hashlib
 import json
 import time
 import requests
-from datetime import datetime
 
 db = firestore.Client()
 app = Flask(__name__)
