@@ -122,7 +122,7 @@
                 Komentarze:
             </h4>
 
-            <add-comment />
+            <add-comment @added="getReviews(id).then(reviews => movie.reviews = reviews)" />
 
             <comment
                     :text="review.content"
@@ -220,7 +220,6 @@
                         let x = [];
                         let reviews = response.body;
                         for (let review of reviews) {
-                            console.log(review.time);
                             x.push(
                                 new Review(review.id, review.author, review.content, review.positivity, review.time)
                             );
