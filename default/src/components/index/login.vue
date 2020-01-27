@@ -4,6 +4,10 @@
         <h1 class="flex-center my-0">VentraeMovies</h1>
         <hr/>
 
+            <div class="mx-auto alert alert-danger font-small" v-if="error !== ''">
+                {{ error }}
+            </div>
+
             <mdb-input type="email" label="Adres e-mail" outline v-model="email"/>
 
             <mdb-input type="password" label="Hasło" outline v-model="password"/>
@@ -30,7 +34,8 @@
         data(){
             return {
                 email: '',
-                password: ''
+                password: '',
+                error: ''
             }
         },
         methods: {
@@ -69,16 +74,16 @@
                                     this.$router.push('/browse');
                                 }
                                 else {
-                                    alert(response.body);
+                                    this.error = response.body;
                                 }
                             },
                             error => {
-                                console.error(error);
+                                this.error = error.body;
                             }
                         );
                 }
                 else {
-                    alert(validation.error);
+                    this.error = validation.error;
                 }
             },
             switchCard(){

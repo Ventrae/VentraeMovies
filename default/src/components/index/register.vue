@@ -5,6 +5,10 @@
 
         <hr/>
 
+        <div class="mx-auto alert alert-danger font-small" v-if="error !== ''">
+            {{ error }}
+        </div>
+
         <mdb-input type="email" label="Adres e-mail" class="mb-1" outline v-model="email"></mdb-input>
 
         <mdb-input type="password" label="Hasło" class="mb-1" outline v-model="password_a"></mdb-input>
@@ -33,7 +37,8 @@
             return {
                 email: '',
                 password_a: '',
-                password_b: ''
+                password_b: '',
+                error: ''
             }
         },
         methods: {
@@ -74,12 +79,12 @@
                                 this.switchCard();
                             },
                             error => {
-                                console.error(error);
+                                this.error = error.body;
                             }
                         );
                 }
                 else {
-                    alert(validation.error);
+                    this.error = validation.error;
                 }
             },
             switchCard() {

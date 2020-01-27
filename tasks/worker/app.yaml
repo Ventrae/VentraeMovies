@@ -1,4 +1,6 @@
 runtime: python37
 instance_class: F1
 service: tasks-worker
+includes:
+  - env_variables.yaml
 handlers:

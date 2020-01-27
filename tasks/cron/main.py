@@ -2,11 +2,12 @@ from flask import Flask
 from google.cloud import firestore
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import os
 
 app = Flask(__name__)
 db = firestore.Client()
 
-apiKey = "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" 
+apiKey = os.environ['SendGridApiKey']
 
 @app.route("/tasks/cron/newsletter")
 def newsletter():

@@ -1,10 +1,11 @@
 from flask import Flask, request
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import os
 
 app = Flask(__name__)
 
-apiKey = "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" 
+apiKey = os.environ['SendGridApiKey']
 
 @app.route("/tasks/mail", methods=["POST"])
 def mail():

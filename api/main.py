@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, session, redirect, request
 from google.cloud import firestore, tasks_v2, bigquery, language
 from google.cloud.language import enums, types
+from datetime import datetime
 import secrets
 import hashlib
 import json
 import time
 import requests
-from datetime import datetime
 
 db = firestore.Client()
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def login():
     password = request.json.get('password')
     if(email == '' or password == ''):
         return {
-            'Alert': 'Email or password cannot be empty',
+            'Alert': 'Email lub hasło nie może być puste.',
         }, 400
 
     password = hashlib.sha256(password.encode("UTF-8"))
@@ -35,10 +35,10 @@ def login():
     for user in usersOnline:
         if email == user.to_dict()['email']:
             print(user.to_dict()['email'])
-            return 'You are already logged in', 400
+            return 'Jesteś już zalogowany.', 400
 
     if session.get('token'):
-        return 'You are already logged in', 400
+        return 'Jesteś już zalogowany.', 400
 
     for user in users:
         if email == user.to_dict()['email'] and user.to_dict()['password'] == password.hexdigest():
@@ -54,7 +54,7 @@ def login():
         		'email': email
             }
             return jsonify(result), 200
-    return 'Wrong email or password', 400
+    return 'Niepoprawny email lub hasło.', 400
 
 @app.route('/api/logout', methods=['POST'])
 def logout():
@@ -65,9 +65,9 @@ def logout():
             if user.to_dict()['token']==session['token']:
                 usersOnline.document(user.id).delete()
                 session.pop('token', None)
-                return 'Logged out', 200
+                return 'Wylogowano', 200
     else:
-        return 'You are NOT logged in', 401
+        return 'Nie jesteś zalogowany', 401
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -81,11 +81,11 @@ def register():
     
     query_ref = db.collection(u'Users').where("email", "==", email)
     docs = query_ref.stream()
-    communicat = 'Email already in use!'
+    communicat = 'Ten adres email należy już do innego użytkownika!'
 
     if (email == '' or password == ''):
         return {
-            'Alert': 'Email or password cannot be empty',
+            'Alert': 'Email lub hasło nie mogą być puste.',
         }, 400
 
     for doc in docs:
@@ -100,23 +100,23 @@ def register():
     }
 
     db.collection(u'Users').add(data)
-    return 'Success', 200
+    return 'Rejestracja udana!', 200
 
 @app.route('/api/change-password', methods=['POST'])
 def changePassword():
-    return 'Password changed', 200
+    return 'Hasło zostało zmienione', 200
 
 @app.route('/api/change-email', methods=['POST'])
 def changeEmail():
-    return 'Email changed', 200
+    return 'Adres email został zmieniony', 200
 
 @app.route('/api/toggle-newsletter', methods=['POST'])
 def toggleNewsletter():
-    return 'Newsletter preferences changed', 200
+    return 'Ustawienia newslettera zaktualizowane', 200
 
 @app.route('/api/delete-account', methods=['POST'])
 def deleteAccount():
-    return 'Account deleted', 200
+    return 'Konto usunięte', 200
 
 # --- Movies recommendations endpoints: ---
 
@@ -188,7 +188,7 @@ def rate():
         print("BQ Errors:", rowns)
     else:
         db.collection(u'Ratings').document(a[0]["id"]).set(rating)
-    return "Successfully rated a movie", 200
+    return "Pomyślnie oceniono film", 200
 
 @app.route("/api/rating", methods=["GET"])
 def getRating():
@@ -311,7 +311,7 @@ def addComment():
         'movie': int(data.get('movie'))
     }
     db.collection("Comments").add(comment)
-    return "Succesfully added comment", 200
+    return "Pomyślnie dodano komentarz", 200
 
 
 if __name__ == "__main__":
