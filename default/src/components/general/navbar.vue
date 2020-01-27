@@ -54,7 +54,6 @@
                             console.error(error);
                         }
                     );
-
             }
         }
     }
