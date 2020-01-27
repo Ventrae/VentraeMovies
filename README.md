@@ -11,7 +11,8 @@ System rekomendacji filmów, bada gust użytkownika i rekomenduje filmy na podst
     - AppEngine
     - Firestore
     - Cloud Tasks, Cron
-    - BigQuery (DataStudio)
+    - Natural Language API
+    - BigQuery, Datastudio
 * Aplikacja frontendowa:
     - Vue.js (SPA framework)
     - VueRouter, Vuex, VueResource
