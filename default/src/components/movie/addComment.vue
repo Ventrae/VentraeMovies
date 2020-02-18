@@ -41,6 +41,7 @@
                         movie: this.$route.params.id
                     };
                     this.cooldown = 3;
+                    this.comment = "";
                     this.$http.post(url, body)
                         .then(response => {
                                 this.$emit('added');

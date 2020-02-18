@@ -50,6 +50,7 @@ def login():
             })
             result = {
         		'id': user.id,
+                'newsletter': user.to_dict()['newsletter'],
         		'token': token,
         		'email': email
             }
@@ -104,19 +105,19 @@ def register():
 
 @app.route('/api/change-password', methods=['POST'])
 def changePassword():
-    return 'Hasło zostało zmienione', 200
+    return 'Funkcja niezaimplementowana', 200
 
 @app.route('/api/change-email', methods=['POST'])
 def changeEmail():
-    return 'Adres email został zmieniony', 200
+    return 'Funkcja niezaimplementowana', 200
 
 @app.route('/api/toggle-newsletter', methods=['POST'])
 def toggleNewsletter():
-    return 'Ustawienia newslettera zaktualizowane', 200
+    return 'Funkcja niezaimplementowana', 200
 
 @app.route('/api/delete-account', methods=['POST'])
 def deleteAccount():
-    return 'Konto usunięte', 200
+    return 'Funkcja niezaimplementowana', 200
 
 # --- Movies recommendations endpoints: ---
 

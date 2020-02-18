@@ -5,9 +5,11 @@
 
         <hr/>
 
-        <div class="mx-auto alert alert-danger font-small" v-if="error !== ''">
-            {{ error }}
-        </div>
+        <alert
+            :error="error"
+            :positive="error === 'Rejestracja udana!'"
+            v-if="error !== ''"
+        />
 
         <mdb-input type="email" label="Adres e-mail" class="mb-1" outline v-model="email"></mdb-input>
 
@@ -31,8 +33,10 @@
 </template>
 
 <script>
+    import Alert from "@/components/index/alert";
     export default {
         name: "register",
+        components: {Alert},
         data(){
             return {
                 email: '',
@@ -75,8 +79,10 @@
                     this.$http.post(url, user)
                         .then(
                             response => {
-                                alert('Rejestracja udana!');
-                                this.switchCard();
+                                this.error = "Rejestracja udana!";
+                                setTimeout(()=>{
+                                    this.switchCard();
+                                }, 1500);
                             },
                             error => {
                                 this.error = error.body;

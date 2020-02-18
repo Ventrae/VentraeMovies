@@ -4,13 +4,14 @@
         <h1 class="flex-center my-0">VentraeMovies</h1>
         <hr/>
 
-            <div class="mx-auto alert alert-danger font-small" v-if="error !== ''">
-                {{ error }}
-            </div>
+        <alert
+                :error="error"
+                v-if="error !== ''"
+        />
 
-            <mdb-input type="email" label="Adres e-mail" outline v-model="email"/>
+        <mdb-input type="email" label="Adres e-mail" outline v-model="email"/>
 
-            <mdb-input type="password" label="Hasło" outline v-model="password"/>
+        <mdb-input type="password" label="Hasło" outline v-model="password"/>
 
         <div class="text-center mt-3">
             <mdb-btn type="submit" gradient="blue">Zaloguj</mdb-btn>
@@ -29,8 +30,10 @@
 </template>
 
 <script>
+    import Alert from "@/components/index/alert";
     export default {
         name: "login",
+        components: {Alert},
         data(){
             return {
                 email: '',
@@ -71,6 +74,7 @@
                                     this.$store.state.user.id = response.body.id;
                                     this.$store.state.user.token = response.body.token;
                                     this.$store.state.user.email = response.body.email;
+                                    this.$store.state.user.newsletter = response.body.newsletter;
                                     this.$router.push('/browse');
                                 }
                                 else {
