@@ -31,10 +31,4 @@
 </script>
 
 <style scoped>
-    #page-browse {
-        min-height: 94vh;
-    }
-    h2 {
-        font-family: 'Raleway', sans-serif;
-    }
 </style>

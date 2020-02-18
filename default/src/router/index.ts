@@ -8,18 +8,15 @@ import Index from '@/views/Index.vue';
 import indexFooter from '@/components/index/indexFooter.vue';
 
 import Movie from '@/views/Movie.vue';
-
 import Browse from '@/views/Browse.vue';
-
+import SearchResults from '@/views/SearchResutls.vue';
 import Recommendations from '@/views/Recommendations.vue';
-
 import Account from '@/views/Account.vue';
-
 import Reviews from '@/views/Reviews.vue';
 
 Vue.use(VueRouter);
 
-let enableGuards = false;
+let enableGuards = true;
 
 const routes = [
   {
@@ -35,6 +32,25 @@ const routes = [
     name: 'browse',
     components: {
       default: Browse,
+      navbar: navbar
+    },
+    beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){
+      if(enableGuards){
+        if(store.state.user.token != ''){
+          next();
+        }
+        else {
+          next({name: 'index'});
+        }
+      }
+      else next();
+    }
+  },
+  {
+    path: '/search',
+    name: 'search',
+    components: {
+      default: SearchResults,
       navbar: navbar
     },
     beforeEnter(to: any, from: any, next: { (): void; (arg0: { name: string; }): void; }){

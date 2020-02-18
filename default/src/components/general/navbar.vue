@@ -7,6 +7,10 @@
         </mdb-navbar-brand>
         <mdb-navbar-toggler>
             <mdb-navbar-nav right>
+                <search />
+                <mdb-nav-item>
+                    <p class="nav-link d-none d-md-block p-0 my-0">|</p>
+                </mdb-nav-item>
                 <mdb-nav-item>
                     <router-link to="/browse" class="nav-link py-0">
                         Odkrywaj
@@ -31,7 +35,7 @@
                     <p class="nav-link p-0 my-0">|</p>
                 </mdb-nav-item>
                 <mdb-nav-item>
-                    <a href="#" class="nav-link py-0 my-0" @click="logout">Wyloguj</a>
+                    <a href="#" class="nav-link d-none d-md-block py-0 my-0" @click="logout">Wyloguj</a>
                 </mdb-nav-item>
             </mdb-navbar-nav>
         </mdb-navbar-toggler>
@@ -39,8 +43,10 @@
 </template>
 
 <script>
+    import Search from "@/components/general/search";
     export default {
         name: "navbar",
+        components: {Search},
         methods: {
             logout() {
                 let url = 'https://projektarc.appspot.com/api/logout';
